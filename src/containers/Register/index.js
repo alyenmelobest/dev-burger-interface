@@ -3,13 +3,13 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
-import BurguerLogin from '../../assets/burguer-login.svg'
 import Logo from '../../assets/dev-burger-logo.svg'
+import RegisterImg from '../../assets/register-img.svg'
 import Button from '../../components/Button'
 import api from '../../services/api'
 import {
   Container,
-  LoginImage,
+  RegisterImage,
   ContainerItens,
   Label,
   Input,
@@ -17,14 +17,18 @@ import {
   SignInLink
 } from './styles'
 
-function Login() {
+function Register() {
   const schema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
     email: Yup.string()
       .email('Enter a valid email address')
       .required('Email is required'),
     password: Yup.string()
       .required('Password is required')
-      .min(6, 'Password must be at least 6 characters')
+      .min(6, 'Password must be at least 6 characters'),
+    confirmPassword: Yup.string()
+      .required('Password is required')
+      .oneOf([Yup.ref('password')], 'The passwords must be the same')
   })
   const {
     register,
@@ -35,7 +39,8 @@ function Login() {
   })
 
   const onSubmit = async clientData => {
-    const response = await api.post('sessions', {
+    const response = await api.post('users', {
+      name: clientData.name,
       email: clientData.email,
       password: clientData.password
     })
@@ -45,12 +50,20 @@ function Login() {
 
   return (
     <Container>
-      <LoginImage src={BurguerLogin} alt="Burguer-login-image" />
+      <RegisterImage src={RegisterImg} alt="register-image" />
       <ContainerItens>
         <img src={Logo} alt="logo-image" />
-        <h1>Login</h1>
+        <h1>Sign-Up</h1>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
-          <Label>Email</Label>
+          <Label error={errors.name?.message}>Name</Label>
+          <Input
+            type="text"
+            {...register('name')}
+            error={errors.name?.message}
+          />
+          <ErrorMessage>{errors.name?.message}</ErrorMessage>
+
+          <Label error={errors.email?.message}>Email</Label>
           <Input
             type="email"
             {...register('email')}
@@ -58,24 +71,34 @@ function Login() {
           />
           <ErrorMessage>{errors.email?.message}</ErrorMessage>
 
-          <Label>Senha</Label>
+          <Label error={errors.password?.message}>Password</Label>
           <Input
             type="password"
             {...register('password')}
-            error={errors.email?.message}
+            error={errors.password?.message}
           />
           <ErrorMessage>{errors.password?.message}</ErrorMessage>
 
-          <Button type="submit" style={{ marginTop: 75, marginBottom: 25 }}>
-            Sign In
+          <Label error={errors.ConfirmPassword?.message}>
+            Confirm password
+          </Label>
+          <Input
+            type="password"
+            {...register('ConfirmPassword')}
+            error={errors.ConfirmPassword?.message}
+          />
+          <ErrorMessage>{errors.ConfirmPassword?.message}</ErrorMessage>
+
+          <Button type="submit" style={{ marginTop: 25, marginBottom: 25 }}>
+            Sign Up
           </Button>
         </form>
         <SignInLink>
-          Não possui conta? <a>Sign Up</a>
+          Already have an account? <a>Sign In</a>
         </SignInLink>
       </ContainerItens>
     </Container>
   )
 }
 
-export default Login
+export default Register

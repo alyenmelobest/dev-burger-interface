@@ -11,12 +11,13 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
 `
-export const LoginImage = styled.img`
-  min-height: 70%;
+export const RegisterImage = styled.img`
+  height: 80%;
+  border-radius: 10px 0px 0px 10px;
 `
 
 export const ContainerItens = styled.div`
-  min-height: 70%;
+  height: 80%;
   padding: 25px 75px;
 
   display: flex;
@@ -28,7 +29,7 @@ export const ContainerItens = styled.div`
 
   img {
     width: 381px;
-    height: 130px;
+    height: 100px;
   }
 
   form {
@@ -38,7 +39,7 @@ export const ContainerItens = styled.div`
 
   h1 {
     text-align: center;
-    margin-top: 100px;
+    margin-top: 25px;
 
     font-weight: 500;
     font-size: 24px;
@@ -54,7 +55,7 @@ export const Label = styled.p`
   line-height: 14px;
 
   color: #ffffff;
-  margin-top: 28px;
+  margin-top: ${props => (props.error ? '12px' : '28px')};
   margin-bottom: 5px;
 `
 export const Input = styled.input`
